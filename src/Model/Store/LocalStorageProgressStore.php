@@ -42,7 +42,7 @@ class LocalStorageProgressStore extends RequestVarProgressStore
             Requirements::javascriptTemplate(
                 $formJs,
                 ['StorageName' => $this->getStorageName()],
-                $this->getHandler()->ID
+                $this->getHandler() ? $this->getHandler()->ID : null
             );
         }
     }
