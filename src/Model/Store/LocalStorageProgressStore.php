@@ -32,14 +32,18 @@ class LocalStorageProgressStore extends RequestVarProgressStore
     /**
      * {@inheritDoc}
      */
-    public function __construct()
+    public function initAfterRequestHandler($handler)
     {
-        parent::__construct();
+        parent::initAfterRequestHandler($handler);
 
         $formJs = $this->config()->get('require_form_js');
 
         if ($formJs) {
-            Requirements::javascript($formJs);
+            Requirements::javascriptTemplate(
+                $formJs,
+                ['StorageName' => $this->getStorageName()],
+                $this->getHandler()->ID
+            );
         }
     }
 

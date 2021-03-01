@@ -4,6 +4,7 @@ namespace CodeCraft\Pathfinder\Model\Store;
 
 use CodeCraft\Pathfinder\Control\PathfinderRequestHandler;
 use CodeCraft\Pathfinder\Model\Answer;
+use CodeCraft\Pathfinder\Model\Pathfinder;
 use CodeCraft\Pathfinder\Model\Question;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Configurable;
@@ -36,6 +37,11 @@ class ProgressStore
     protected $entries = [];
 
     /**
+     * @var Pathfinder
+     */
+    protected $handler;
+
+    /**
      * @param RequestHandler $handler
      *
      * @return void
@@ -43,6 +49,7 @@ class ProgressStore
     public function initAfterRequestHandler($handler)
     {
         // Do any useful things to initialise with the handler
+        $this->setHandler($handler);
     }
 
     /**
@@ -145,6 +152,25 @@ class ProgressStore
     }
 
     /**
+     * @return Pathfinder
+     */
+    public function getHandler()
+    {
+        return $this->handler;
+    }
+
+    /**
+     * @param PathfinderRequestHandler $handler
+     * @return ProgressStore $this
+     */
+    public function setHandler($handler)
+    {
+        $this->handler = $handler;
+
+        return $this;
+    }
+
+    /**
      * Invoked as part of {@see PathfinderRequestHandler::Form()}
      *
      * @return void
@@ -171,7 +197,11 @@ class ProgressStore
      */
     public function getStorageName()
     {
-        return $this->config()->get('storage_name');
+        return sprintf(
+            '%s%s',
+            $this->config()->get('storage_name'),
+            $this->getHandler() ? $this->getHandler()->ID : ''
+        );
     }
 
     /**

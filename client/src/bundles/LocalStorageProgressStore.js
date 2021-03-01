@@ -1,5 +1,7 @@
 require('nodelist-foreach-polyfill');
 
+const storageName = '$StorageName';
+
 /**
  * @param {string} encoded
  */
@@ -56,7 +58,7 @@ const LocalStorageProgressStore = () => {
   // If it's not the latest, we redirect to update the request to the latest store
 
   const encodedRequestProgress = getQueryVariable('progress');
-  const encodedLocalProgress = window.localStorage.getItem('PathfinderProgress');
+  const encodedLocalProgress = window.localStorage.getItem(storageName);
 
   if (encodedRequestProgress) {
     const requestProgress = decodeProgress(encodedRequestProgress);
@@ -64,7 +66,7 @@ const LocalStorageProgressStore = () => {
 
     if (!localProgress || requestProgress.timestamp >= localProgress.timestamp) {
       // Sync down the latest store
-      window.localStorage.setItem('PathfinderProgress', encodedRequestProgress);
+      window.localStorage.setItem(storageName, encodedRequestProgress);
 
       // Nothing else to do
       return;
